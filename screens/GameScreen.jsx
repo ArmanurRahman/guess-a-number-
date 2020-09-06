@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet, Button } from "react-native";
+import React, { useState, useRef, useEffect } from "react";
+import { View, Text, StyleSheet, Button, Alert } from "react-native";
 import NumberContainer from "../components/NumberContainer";
 import Card from "../components/Card";
 
@@ -12,18 +12,64 @@ const generateRandomNumber = (min, max, exclude) => {
     }
     return rndNumber;
 };
+
 const GameScreen = (props) => {
     const [guessNumber, setGuessNumber] = useState(
         generateRandomNumber(0, 100, props.userChoice)
     );
+
+    const [rounds, setRounds] = useState(0);
+    const currentLow = useRef(1);
+    const currentHigh = useRef(100);
+    const { userChoice, onGameOver } = props;
+
+    useEffect(() => {
+        if (guessNumber === props.userChoice) {
+            props.onGameOver(rounds);
+        }
+    }, [guessNumber, userChoice, onGameOver]);
+    const nextGusessHandler = (direction) => {
+        if (
+            (direction === "lower" && guessNumber < props.userChoice) ||
+            (direction === "higher" && guessNumber > props.userChoice)
+        ) {
+            Alert.alert("dont'n lie", "You know that it is wrong", [
+                {
+                    text: "sorry",
+                    style: "cancel",
+                },
+            ]);
+            return;
+        }
+
+        if (direction === "lower") {
+            currentHigh.current = guessNumber;
+        } else {
+            currentLow.current = guessNumber;
+        }
+
+        const nextGuess = generateRandomNumber(
+            currentLow.current,
+            currentHigh.current,
+            guessNumber
+        );
+        setRounds((currentRounds) => currentRounds + 1);
+        setGuessNumber(nextGuess);
+    };
     return (
         <View style={styles.screen}>
             <Text> Opponent's Guess</Text>
             <NumberContainer>{guessNumber}</NumberContainer>
             <View>
                 <Card style={styles.buttonContainer}>
-                    <Button title='LOWER' />
-                    <Button title='HIGHER' />
+                    <Button
+                        title='LOWER'
+                        onPress={() => nextGusessHandler("lower")}
+                    />
+                    <Button
+                        title='HIGHER'
+                        onPress={() => nextGusessHandler("higher")}
+                    />
                 </Card>
             </View>
         </View>
