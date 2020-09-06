@@ -12,6 +12,7 @@ import Card from "../components/Card";
 import Color from "../constants/color";
 import Input from "../components/Inout";
 import NumberContainer from "../components/NumberContainer";
+import TitleText from "../components/TitleText";
 
 const StartGameScreen = (props) => {
     const [enderNumber, setEnterNumber] = useState("");
@@ -55,7 +56,7 @@ const StartGameScreen = (props) => {
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
             <View style={styles.screen}>
                 <View style={styles.title}>
-                    <Text>Start New Game!</Text>
+                    <TitleText>Start New Game!</TitleText>
                 </View>
                 <Card style={styles.inputContainer}>
                     <Text>Select a number</Text>
