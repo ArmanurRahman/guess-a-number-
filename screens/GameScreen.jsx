@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { View, Text, StyleSheet, Button, Alert } from "react-native";
+import { View, Text, StyleSheet, ScrollView, Alert } from "react-native";
 import NumberContainer from "../components/NumberContainer";
 import Card from "../components/Card";
 import MainButton from "../components/MainButton";
@@ -15,19 +15,28 @@ const generateRandomNumber = (min, max, exclude) => {
     return rndNumber;
 };
 
+const renderList = (value, index) => {
+    return (
+        <View key={value} style={styles.listItem}>
+            <Text>#{index}</Text>
+            <Text>{value}</Text>
+        </View>
+    );
+};
 const GameScreen = (props) => {
     const [guessNumber, setGuessNumber] = useState(
         generateRandomNumber(0, 100, props.userChoice)
     );
 
-    const [rounds, setRounds] = useState(0);
+    //const [rounds, setRounds] = useState(0);
+    const [guess, setGuess] = useState([]);
     const currentLow = useRef(1);
     const currentHigh = useRef(100);
     const { userChoice, onGameOver } = props;
 
     useEffect(() => {
         if (guessNumber === props.userChoice) {
-            props.onGameOver(rounds);
+            props.onGameOver(guess.length);
         }
     }, [guessNumber, userChoice, onGameOver]);
     const nextGusessHandler = (direction) => {
@@ -47,7 +56,7 @@ const GameScreen = (props) => {
         if (direction === "lower") {
             currentHigh.current = guessNumber;
         } else {
-            currentLow.current = guessNumber;
+            currentLow.current = guessNumber + 1;
         }
 
         const nextGuess = generateRandomNumber(
@@ -55,7 +64,7 @@ const GameScreen = (props) => {
             currentHigh.current,
             guessNumber
         );
-        setRounds((currentRounds) => currentRounds + 1);
+        setGuess((currenGuess) => [nextGuess, ...currenGuess]);
         setGuessNumber(nextGuess);
     };
     return (
@@ -71,6 +80,13 @@ const GameScreen = (props) => {
                         <Ionicons name='md-add' size={24} color='white' />
                     </MainButton>
                 </Card>
+            </View>
+            <View style={styles.listContainer}>
+                <ScrollView contentContainerStyle={styles.list}>
+                    {guess.map((gus, index) =>
+                        renderList(gus, guess.length - index)
+                    )}
+                </ScrollView>
             </View>
         </View>
     );
@@ -88,6 +104,24 @@ const styles = StyleSheet.create({
         marginTop: 30,
         width: 300,
         maxWidth: "80%",
+    },
+    listItem: {
+        flexDirection: "row",
+        marginVertical: 10,
+        borderColor: "gray",
+        borderWidth: 1,
+        justifyContent: "space-between",
+        padding: 10,
+        width: "60%",
+    },
+    listContainer: {
+        flex: 1,
+        width: "80%",
+    },
+    list: {
+        flexGrow: 1,
+        alignItems: "center",
+        justifyContent: "flex-end",
     },
 });
 
