@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { View, Text, StyleSheet, Button, Alert } from "react-native";
 import NumberContainer from "../components/NumberContainer";
 import Card from "../components/Card";
+import MainButton from "../components/MainButton";
 
 const generateRandomNumber = (min, max, exclude) => {
     min = Math.ceil(min);
@@ -62,14 +63,12 @@ const GameScreen = (props) => {
             <NumberContainer>{guessNumber}</NumberContainer>
             <View>
                 <Card style={styles.buttonContainer}>
-                    <Button
-                        title='LOWER'
-                        onPress={() => nextGusessHandler("lower")}
-                    />
-                    <Button
-                        title='HIGHER'
-                        onPress={() => nextGusessHandler("higher")}
-                    />
+                    <MainButton onPress={() => nextGusessHandler("lower")}>
+                        LOWER
+                    </MainButton>
+                    <MainButton onPress={() => nextGusessHandler("higher")}>
+                        HIGHER
+                    </MainButton>
                 </Card>
             </View>
         </View>
