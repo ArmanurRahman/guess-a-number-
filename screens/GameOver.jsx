@@ -1,5 +1,12 @@
 import React from "react";
-import { View, Text, StyleSheet, Button, Image } from "react-native";
+import {
+    View,
+    Text,
+    StyleSheet,
+    ScrollView,
+    Image,
+    Dimensions,
+} from "react-native";
 import BodyText from "../components/BodyText";
 import TitleText from "../components/TitleText";
 import Color from "../constants/color";
@@ -7,31 +14,35 @@ import MainButton from "../components/MainButton";
 
 const GameOver = (props) => {
     return (
-        <View style={styles.screen}>
-            <TitleText>Game is Over</TitleText>
-            <View style={styles.imageContainer}>
-                <Image
-                    source={require("../assets/success.png")}
-                    style={styles.image}
-                    resizeMode='cover'
-                />
-            </View>
+        <ScrollView>
+            <View style={styles.screen}>
+                <TitleText>Game is Over</TitleText>
+                <View style={styles.imageContainer}>
+                    <Image
+                        source={require("../assets/success.png")}
+                        style={styles.image}
+                        resizeMode='cover'
+                    />
+                </View>
 
-            <View style={styles.resultContainer}>
-                <BodyText style={styles.resultText}>
-                    {" "}
-                    Your Phone needed{" "}
-                    <Text style={styles.highlight}>
+                <View style={styles.resultContainer}>
+                    <BodyText style={styles.resultText}>
                         {" "}
-                        {props.numberOfRound}{" "}
-                    </Text>
-                    to guess the number{" "}
-                    <Text style={styles.highlight}>{props.guessNumber}</Text>
-                </BodyText>
-            </View>
+                        Your Phone needed{" "}
+                        <Text style={styles.highlight}>
+                            {" "}
+                            {props.numberOfRound}{" "}
+                        </Text>
+                        to guess the number{" "}
+                        <Text style={styles.highlight}>
+                            {props.guessNumber}
+                        </Text>
+                    </BodyText>
+                </View>
 
-            <MainButton onPress={props.restartGame}>New Game</MainButton>
-        </View>
+                <MainButton onPress={props.restartGame}>New Game</MainButton>
+            </View>
+        </ScrollView>
     );
 };
 
@@ -40,15 +51,16 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
+        paddingVertical: 10,
     },
     imageContainer: {
-        width: 300,
-        height: 300,
-        borderRadius: 150,
+        width: Dimensions.get("window").width * 0.7,
+        height: Dimensions.get("window").width * 0.7,
+        borderRadius: (Dimensions.get("window").width * 0.7) / 2,
         borderWidth: 3,
         borderColor: "black",
         overflow: "hidden",
-        marginVertical: 30,
+        marginVertical: Dimensions.get("window").height / 30,
     },
     image: {
         width: "100%",
@@ -60,11 +72,11 @@ const styles = StyleSheet.create({
     },
     resultContainer: {
         marginHorizontal: 30,
-        marginVertical: 15,
+        marginVertical: Dimensions.get("window").height / 60,
     },
     resultText: {
         textAlign: "center",
-        fontSize: 20,
+        fontSize: Dimensions.get("window").height < 400 ? 16 : 20,
     },
 });
 
